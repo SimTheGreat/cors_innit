@@ -12,7 +12,7 @@
     <button id="resendButton">Resend Request to stage.tam.ch</button>
 
     <script>
-      // Function to log events, display them on the website, and persist in local storage
+      // Function to log events, display them on the website, and send them to the backend
       function logEvent(eventType, details) {
         const logsElement = document.getElementById('logs');
         const logItem = document.createElement('li');
@@ -24,6 +24,13 @@
         const logs = JSON.parse(localStorage.getItem('logs')) || [];
         logs.push(logText);
         localStorage.setItem('logs', JSON.stringify(logs));
+
+        // Send the log to the Node.js backend
+        fetch('https://your-node-backend.com/log', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ eventType, details, timestamp: new Date().toISOString() })
+        }).catch(error => console.error('Error sending log to backend:', error));
       }
 
       // Function to load logs from Local Storage on page load
